@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class Board {
     private static final String VERTICAL_LINE = "\u2503";
@@ -19,6 +20,7 @@ public class Board {
     public ArrayList<ArrayList<Tile>> gameBoard;
     private int maxRows;
     private int maxCols;
+    private HashMap<String, Tile> remainingTiles = new HashMap<>();
 
     public Board(int rows, int cols) {
         this.maxRows = rows;
@@ -27,9 +29,18 @@ public class Board {
         for (int i = 0; i < rows; i++) {
             ArrayList<Tile> row = new ArrayList<Tile>();
             for (int j = 0; j < cols; j++) {
-                row.add(new Tile("blank", i, j));
+                Tile t = new Tile("blank", i, j);
+                row.add(t);
+                String key = String.format("%c%d", ((char) 65 + i), j);
+                remainingTiles.put(key, t);
             }
             gameBoard.add(row);
+        }
+    }
+
+    public void debugRemainingTiles() {
+        for (String s : remainingTiles.keySet()) {
+            System.out.println(s);
         }
     }
 
@@ -40,6 +51,8 @@ public class Board {
             int x = coord / maxCols;
             int y = coord % maxCols;
             gameBoard.get(x).get(y).setType("mine");
+            String key = String.format("%c%d", ((char) 65 + x), y);
+            remainingTiles.remove(key);
             // Hashmap
         }
         // addNumbered();
@@ -256,5 +269,45 @@ public class Board {
                 System.out.printf("%s, ", gameBoard.get(i).get(j).getType());
             }
         }
+    }
+
+    // DFS
+    public void revealEmptySpace(Tile t) {
+        if (t.getIsRevealed() == true) {
+            return;
+        }
+        t.revealTile();
+        int r = t.getRow();
+        int c = t.getCol();
+        // Go up
+        if (validBlankTile(r - 1, c))
+            revealEmptySpace(gameBoard.get(r - 1).get(c));
+        // Go right
+        if (validBlankTile(r, c + 1))
+            revealEmptySpace(gameBoard.get(r).get(c + 1));
+        // Go down
+        if (validBlankTile(r + 1, c))
+            revealEmptySpace(gameBoard.get(r + 1).get(c));
+        // Go left
+        if (validBlankTile(r, c - 1))
+            revealEmptySpace(gameBoard.get(r).get(c - 1));
+
+    }
+
+    private boolean validBlankTile(int row, int col) {
+        if (row < 0 || col < 0)
+            return false;
+
+        if (row >= maxRows || col >= maxCols)
+            return false;
+
+        Tile t = gameBoard.get(row).get(col);
+        if (t.getIsRevealed() == true)
+            return false;
+
+        if (t.getType() == "mine" || t.getType() == "numbered")
+            return false;
+
+        return true;
     }
 }
