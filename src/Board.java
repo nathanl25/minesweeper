@@ -50,10 +50,11 @@ public class Board {
         for (Integer coord : mineCoords) {
             int x = coord / maxCols;
             int y = coord % maxCols;
-            gameBoard.get(x).get(y).setType("mine");
+            Tile mine = gameBoard.get(x).get(y);
+            mine.setType("mine");
+            markSurroundingNumbers(mine);
             String key = String.format("%c%d", ((char) 65 + x), y);
             remainingTiles.remove(key);
-            // Hashmap
         }
         // addNumbered();
     }
@@ -68,23 +69,11 @@ public class Board {
         return mineList.subList(0, mineAmount);
     }
 
-    public void addNumbered() {
-        for (int i = 0; i < maxRows; i++) {
-            for (int j = 0; j < maxCols; j++) {
-                Tile toCheck = gameBoard.get(i).get(j);
-                checkForSurroundingMines(toCheck);
-            }
-        }
-    }
-
-    private void checkForSurroundingMines(Tile toCheck) {
-        if (toCheck.getType() == "mine") {
-            return;
-        }
-        int startRow = toCheck.getRow() - 1;
-        int endRow = toCheck.getRow() + 1;
-        int startCol = toCheck.getCol() - 1;
-        int endCol = toCheck.getCol() + 1;
+    private void markSurroundingNumbers(Tile mine) {
+        int startRow = mine.getRow() - 1;
+        int endRow = mine.getRow() + 1;
+        int startCol = mine.getCol() - 1;
+        int endCol = mine.getCol() + 1;
         for (int i = startRow; i <= endRow; i++) {
             for (int j = startCol; j <= endCol; j++) {
                 if (i < 0 || j < 0) {
@@ -94,13 +83,47 @@ public class Board {
                     continue;
                 }
                 Tile check = gameBoard.get(i).get(j);
-                if (check.getType() == "mine") {
-                    toCheck.setType("numbered");
-                    toCheck.setValue(toCheck.getValue() + 1);
+                if (check.getType() != "mine") {
+                    check.setType("numbered");
+                    check.setValue(check.getValue() + 1);
                 }
             }
         }
     }
+
+    // public void addNumbered() {
+    // for (int i = 0; i < maxRows; i++) {
+    // for (int j = 0; j < maxCols; j++) {
+    // Tile toCheck = gameBoard.get(i).get(j);
+    // checkForSurroundingMines(toCheck);
+    // }
+    // }
+    // }
+
+    // private void checkForSurroundingMines(Tile toCheck) {
+    // if (toCheck.getType() == "mine") {
+    // return;
+    // }
+    // int startRow = toCheck.getRow() - 1;
+    // int endRow = toCheck.getRow() + 1;
+    // int startCol = toCheck.getCol() - 1;
+    // int endCol = toCheck.getCol() + 1;
+    // for (int i = startRow; i <= endRow; i++) {
+    // for (int j = startCol; j <= endCol; j++) {
+    // if (i < 0 || j < 0) {
+    // continue;
+    // }
+    // if (i >= maxRows || j >= maxCols) {
+    // continue;
+    // }
+    // Tile check = gameBoard.get(i).get(j);
+    // if (check.getType() == "mine") {
+    // toCheck.setType("numbered");
+    // toCheck.setValue(toCheck.getValue() + 1);
+    // }
+    // }
+    // }
+    // }
 
     public void printBoard() {
         for (int i = 0; i < (maxRows * 2) + 1; i++) {
@@ -177,9 +200,6 @@ public class Board {
     }
 
     private String debugPrintCell(Tile tile) {
-        // if (tile.getIsRevealed() == false) {
-        // return " ";
-        // }
         String value = "";
         String color = "";
         String bgColor = "";
@@ -199,10 +219,6 @@ public class Board {
             default:
                 break;
         }
-        // System.out.println(tile.getType());
-        // if (tile.getType() == "mine") {
-        // System.out.printf("%s%s %s %s", bgColor, color, value, ANSI_RESET);
-        // }
         return String.format("%s%s %s %s", bgColor, color, value, ANSI_RESET);
     }
 
