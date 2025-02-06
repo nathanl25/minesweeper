@@ -36,9 +36,10 @@ public class Tile {
     }
 
     public void revealTile() {
-        if (this.isRevealed == true) {
-            System.out.println("Tile has already been selected, select a different tile");
-        }
+        // if (this.isRevealed == true) {
+        // System.out.println("Tile has already been selected, select a different
+        // tile");
+        // }
         this.isRevealed = true;
     }
 

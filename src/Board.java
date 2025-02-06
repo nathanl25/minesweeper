@@ -17,10 +17,12 @@ public class Board {
     public static final String CYAN_BOLD = "\033[1;36m"; // CYAN
     public static final String WHITE_BOLD = "\033[1;37m"; // WHITE
     public static final String RED_BACKGROUND = "\033[41m"; // RED
+    public static final String WHITE_BACKGROUND = "\033[47m"; // WHITE
     public ArrayList<ArrayList<Tile>> gameBoard;
     private int maxRows;
     private int maxCols;
     private HashMap<String, Tile> remainingTiles = new HashMap<>();
+    private String gameStatus = "win";
 
     public Board(int rows, int cols) {
         this.maxRows = rows;
@@ -224,7 +226,7 @@ public class Board {
 
     private static String printCell(Tile tile) {
         if (tile.getIsRevealed() == false) {
-            return "   ";
+            return String.format("%s   %s", WHITE_BACKGROUND, ANSI_RESET);
         }
         String value = "";
         String color = "";
@@ -238,7 +240,7 @@ public class Board {
             case "blank":
                 value = " ";
                 break;
-            case "number":
+            case "numbered":
                 value = String.format("%d", tile.getValue());
                 color = getColor(tile.getValue());
                 break;
@@ -289,12 +291,18 @@ public class Board {
 
     // DFS
     public void revealEmptySpace(Tile t) {
+        // System.out.println("DFS");
         if (t.getIsRevealed() == true) {
             return;
         }
         t.revealTile();
         int r = t.getRow();
         int c = t.getCol();
+        String coord = String.format("%c%d", (char) r + 65, c);
+        remainingTiles.remove(coord);
+        if (t.getType() == "numbered") {
+            return;
+        }
         // Go up
         if (validBlankTile(r - 1, c))
             revealEmptySpace(gameBoard.get(r - 1).get(c));
@@ -321,9 +329,31 @@ public class Board {
         if (t.getIsRevealed() == true)
             return false;
 
-        if (t.getType() == "mine" || t.getType() == "numbered")
+        if (t.getType() == "mine")
             return false;
 
         return true;
     }
+
+    public boolean selectTile(int row, int col) {
+        Tile selectedTile = gameBoard.get(row).get(col);
+        String type = selectedTile.getType();
+        if (type == "mine") {
+            this.gameStatus = "lose";
+            selectedTile.revealTile();
+            return true;
+        }
+        if (selectedTile.getIsRevealed() == true) {
+            return remainingTiles.isEmpty();
+        }
+
+        revealEmptySpace(selectedTile);
+        return remainingTiles.isEmpty();
+
+    }
+
+    public boolean gameIsWon() {
+        return (this.gameStatus == "win" ? true : false);
+    }
+
 }
