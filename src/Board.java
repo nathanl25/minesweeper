@@ -93,46 +93,12 @@ public class Board {
         }
     }
 
-    // public void addNumbered() {
-    // for (int i = 0; i < maxRows; i++) {
-    // for (int j = 0; j < maxCols; j++) {
-    // Tile toCheck = gameBoard.get(i).get(j);
-    // checkForSurroundingMines(toCheck);
-    // }
-    // }
-    // }
-
-    // private void checkForSurroundingMines(Tile toCheck) {
-    // if (toCheck.getType() == "mine") {
-    // return;
-    // }
-    // int startRow = toCheck.getRow() - 1;
-    // int endRow = toCheck.getRow() + 1;
-    // int startCol = toCheck.getCol() - 1;
-    // int endCol = toCheck.getCol() + 1;
-    // for (int i = startRow; i <= endRow; i++) {
-    // for (int j = startCol; j <= endCol; j++) {
-    // if (i < 0 || j < 0) {
-    // continue;
-    // }
-    // if (i >= maxRows || j >= maxCols) {
-    // continue;
-    // }
-    // Tile check = gameBoard.get(i).get(j);
-    // if (check.getType() == "mine") {
-    // toCheck.setType("numbered");
-    // toCheck.setValue(toCheck.getValue() + 1);
-    // }
-    // }
-    // }
-    // }
-
     public void printBoard() {
         for (int i = 0; i < (maxRows * 2) + 1; i++) {
             if (i == 0) {
                 System.out.printf("  ");
                 for (int j = 0; j < maxCols; j++) {
-                    System.out.printf("  %d ", j);
+                    System.out.printf("%3d%1s", j, " ");
                 }
                 System.out.println();
             }
@@ -167,7 +133,7 @@ public class Board {
             if (i == 0) {
                 System.out.printf("  ");
                 for (int j = 0; j < maxCols; j++) {
-                    System.out.printf("  %d ", j);
+                    System.out.printf("%3d%1s", j, " ");
                 }
                 System.out.println();
             }

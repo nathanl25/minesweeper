@@ -45,16 +45,5 @@ public class App {
             newGame.debugPrintBoard();
         }
         scan.close();
-        // // newGame.debugPrintBoard();
-        // // newGame.selectTile(1, 1);
-        // // newGame.printBoard();
-        // // newGame.debugPrintBoard();
-        // newGame.addNumbered();
-        // newGame.debugPrintBoard();
-        // newGame.debugRemainingTiles();
-        // newGame.printBoard();
-        // newGame.dumpBoardValues();
-        // Tile zeroZero = newGame.gameBoard.get(0).get(0);
-        // System.out.println(zeroZero);
     }
 }
