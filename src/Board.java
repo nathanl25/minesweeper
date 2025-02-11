@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Board {
     private static final String VERTICAL_LINE = "\u2503";
@@ -21,7 +21,7 @@ public class Board {
     public ArrayList<ArrayList<Tile>> gameBoard;
     private int maxRows;
     private int maxCols;
-    private HashMap<String, Tile> remainingTiles = new HashMap<>();
+    private HashSet<String> remainingTiles = new HashSet<>();
     private String gameStatus = "win";
 
     public Board(int rows, int cols) {
@@ -34,15 +34,9 @@ public class Board {
                 Tile t = new Tile("blank", i, j);
                 row.add(t);
                 String key = String.format("%c%d", ((char) 65 + i), j);
-                remainingTiles.put(key, t);
+                remainingTiles.add(key);
             }
             gameBoard.add(row);
-        }
-    }
-
-    public void debugRemainingTiles() {
-        for (String s : remainingTiles.keySet()) {
-            System.out.println(s);
         }
     }
 
@@ -58,7 +52,6 @@ public class Board {
             String key = String.format("%c%d", ((char) 65 + x), y);
             remainingTiles.remove(key);
         }
-        // addNumbered();
     }
 
     private List<Integer> generateMineCoords(int mineAmount, int startPosition) {
@@ -77,11 +70,11 @@ public class Board {
         int startCol = mine.getCol() - 1;
         int endCol = mine.getCol() + 1;
         for (int i = startRow; i <= endRow; i++) {
+            if (i < 0 || i >= maxRows) {
+                continue;
+            }
             for (int j = startCol; j <= endCol; j++) {
-                if (i < 0 || j < 0) {
-                    continue;
-                }
-                if (i >= maxRows || j >= maxCols) {
+                if (j < 0 || j >= maxCols) {
                     continue;
                 }
                 Tile check = gameBoard.get(i).get(j);
@@ -154,9 +147,6 @@ public class Board {
                         System.out.printf("%s", VERTICAL_LINE);
                     } else {
                         Tile revealed = this.gameBoard.get(i / 2).get(j / 2);
-                        // System.out.printf("%s ", revealed.getRow());
-                        // System.out.printf("%s ", revealed.getCol());
-
                         System.out.printf("%s", debugPrintCell(revealed));
                     }
                 }
@@ -257,7 +247,6 @@ public class Board {
 
     // DFS
     public void revealEmptySpace(Tile t) {
-        // System.out.println("DFS");
         if (t.getIsRevealed() == true) {
             return;
         }
