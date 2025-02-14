@@ -3,47 +3,31 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) throws Exception {
 
-        int rowInput;
-        int colInput;
-        String rowInputStr;
         System.out.println("Welcome to Minesweeper");
         Scanner scan = new Scanner(System.in);
-        System.out.printf("Please enter amount of rows: ");
-        rowInput = scan.nextInt();
-        System.out.printf("Please enter amount of columns: ");
-        colInput = scan.nextInt();
-        Board newGame = new Board(rowInput, colInput);
-        System.out.println("\nBoard Created, printing board\n");
-        newGame.printBoard();
-        System.out.printf("Enter amount of mines: ");
-        int mines = scan.nextInt();
-        System.out.printf("Enter Row Value: ");
-        rowInputStr = scan.next();
-        rowInput = ((int) rowInputStr.charAt(0)) - 65;
-        System.out.printf("Enter Column Value: ");
-        colInput = scan.nextInt();
-        newGame.addMines(mines, rowInput, colInput);
-        newGame.selectTile(rowInput, colInput);
-        newGame.printBoard();
-        boolean gameOver = false;
-        while (gameOver == false) {
-            System.out.printf("Enter Row Value: ");
-            rowInputStr = scan.next();
-            rowInput = ((int) rowInputStr.charAt(0)) - 65;
-            System.out.printf("Enter Column Value: ");
-            colInput = scan.nextInt();
-            gameOver = newGame.selectTile(rowInput, colInput);
-            newGame.printBoard();
-        }
 
-        if (newGame.gameIsWon()) {
-            System.out.println("Congratulations, you win!");
-            newGame.printBoard();
-        } else {
-
-            System.out.println("Better luck next time, revealing board.\n");
-            newGame.debugPrintBoard();
+        boolean activeGame = true;
+        while (activeGame) {
+            Game newGame = new Game(scan);
+            boolean gameInProgress = newGame.getGameInProgress();
+            while (gameInProgress) {
+                newGame.getBoard().printBoard();
+                int[] coordinates = newGame.promptCoordinates(scan);
+                int row = coordinates[0];
+                int col = coordinates[1];
+                gameInProgress = newGame.inputCoordinates(row, col);
+            }
+            boolean gameIsWon = newGame.getGameStatus();
+            if (gameIsWon) {
+                System.out.println("Congratulations, you win!");
+                newGame.getBoard().printBoard();
+            } else {
+                System.out.println("Better luck next time, revealing board.\n");
+                newGame.getBoard().debugPrintBoard();
+            }
+            activeGame = Game.promptPlayAgain(scan);
         }
+        System.out.println("Thank you for playing, exiting Game...");
         scan.close();
     }
 }

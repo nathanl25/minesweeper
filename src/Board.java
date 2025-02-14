@@ -22,7 +22,14 @@ public class Board {
     private int maxRows;
     private int maxCols;
     private HashSet<String> remainingTiles = new HashSet<>();
-    private String gameStatus = "win";
+
+    public int getMaxRows() {
+        return this.maxRows;
+    }
+
+    public int getMaxCols() {
+        return this.maxCols;
+    }
 
     public Board(int rows, int cols) {
         this.maxRows = rows;
@@ -118,6 +125,7 @@ public class Board {
             }
 
         }
+        System.out.println();
         return;
     }
 
@@ -154,6 +162,7 @@ public class Board {
             }
 
         }
+        System.out.println();
         return;
     }
 
@@ -294,21 +303,20 @@ public class Board {
         Tile selectedTile = gameBoard.get(row).get(col);
         String type = selectedTile.getType();
         if (type == "mine") {
-            this.gameStatus = "lose";
             selectedTile.revealTile();
-            return true;
+            return false;
         }
         if (selectedTile.getIsRevealed() == true) {
-            return remainingTiles.isEmpty();
+            System.out.println("You have already selected this tile before");
         }
 
         revealEmptySpace(selectedTile);
-        return remainingTiles.isEmpty();
+        return !remainingTiles.isEmpty();
 
     }
 
     public boolean gameIsWon() {
-        return (this.gameStatus == "win" ? true : false);
+        return remainingTiles.isEmpty();
     }
 
 }

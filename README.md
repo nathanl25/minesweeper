@@ -48,6 +48,7 @@
 - Have the app be more robust in regards to parsing inputs
 - Readability of code
 - Breaking code into smaller sub-classes
+- Have tests give weighted performance for shuffling a list, vs using a hashset for generating random numbers
 
 ---
 
