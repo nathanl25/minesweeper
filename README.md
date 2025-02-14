@@ -6,22 +6,26 @@
 
 ## Requirements / Purpose
 
-- MVP
 - To show understanding of Java through use of replicating minesweepper via the JVM
-- To demonstrate awareness
 
 ---
 
 ## Build Steps
 
-- how to build / run project
-- use proper code snippets if there are any commands to run
+```bash
+
+cd src
+javac ./App.java -d ../bin
+cd ../bin
+java App
+
+```
 
 ---
 
 ## Design Goals / Approach
 
-- Because the game uses logic based on a nested list I opted to have logic that is slightly more complicated but should have faster run times as I wanted to minimise the amount of times the program loops through the nested list. Because of this I opted for things like hashsets of remaining tiles for the win conditions rather than looping through to see what hasn't be revealed or recursion for revealing blank tiles.
+- Because the game uses a nested list I opted to have logic that is slightly more complicated but should have faster run times as I wanted to minimise the amount of times the program loops through the nested list. Because of this I opted for things like a HashSet for the remaining tiles for checking the win condition rather than looping through to see what hasn't be revealed as well as using recursion for revealing adjacent blank tiles.
 
 ---
 
@@ -29,14 +33,14 @@
 
 - Coded in Java
 - Uses a nested ArrayList of class instances for the gameboard
-- Hash Set for remaining tiles
+- Hash Set to track remaining tiles
 - Recursive DFS for revealing adjacent blank tiles
 
 ---
 
 ## Known issues
 
-- Inputs currently are not sanitised
+- ~~Inputs currently are not sanitised~~ Game will prompt user for input until a valid input is entered
 
 ---
 
@@ -54,7 +58,15 @@
 
 ## Change logs
 
+### 14/02/2025 - Further Clean up
+
+- Moved game initialisation to Game class
+- Validated all forms of imput
+- Added option to play again
+
 ### 07/02/2025 - Clean Up
+
+- Added input validation for creating board dimensions
 
 ### 06/02/2025 - Game Logic
 
